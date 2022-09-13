@@ -213,7 +213,7 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 	for i := 0; i < numOfUsers; i++ {
 		user := api.UserInfo{}
 		user.UID = response.Get("data").GetIndex(i).Get("id").MustInt()
-		user.SpeedLimit = uint64(c.SpeedLimit * 1000000 / 8)
+		//user.SpeedLimit = uint64(c.SpeedLimit * 1000000 / 8)
 		user.DeviceLimit = c.DeviceLimit
 		switch c.NodeType {
 		case "Shadowsocks":
@@ -221,13 +221,16 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 			user.Passwd = response.Get("data").GetIndex(i).Get("secret").MustString()
 			user.Method = response.Get("data").GetIndex(i).Get("cipher").MustString()
 			user.Port = uint32(response.Get("data").GetIndex(i).Get("port").MustUint64())
+			user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("speed_limit").MustUint64() * 1000000 / 8)
 		case "Trojan":
 			user.UUID = response.Get("data").GetIndex(i).Get("trojan_user").Get("password").MustString()
 			user.Email = response.Get("data").GetIndex(i).Get("trojan_user").Get("password").MustString()
+			user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("trojan_user").Get("speed_limit").MustString() * 1000000 / 8)
 		case "V2ray":
 			user.UUID = response.Get("data").GetIndex(i).Get("v2ray_user").Get("uuid").MustString()
 			user.Email = response.Get("data").GetIndex(i).Get("v2ray_user").Get("email").MustString()
 			user.AlterID = uint16(response.Get("data").GetIndex(i).Get("v2ray_user").Get("alter_id").MustUint64())
+			user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("v2ray_user").Get("speed_limit").MustString() * 1000000 / 8)
 		}
 		userList[i] = user
 	}
