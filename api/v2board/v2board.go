@@ -225,12 +225,12 @@ func (c *APIClient) GetUserList() (UserList *[]api.UserInfo, err error) {
 		case "Trojan":
 			user.UUID = response.Get("data").GetIndex(i).Get("trojan_user").Get("password").MustString()
 			user.Email = response.Get("data").GetIndex(i).Get("trojan_user").Get("password").MustString()
-			//user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("trojan_user").Get("speed_limit").MustString() * 1000000 / 8)
+			user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("trojan_user").Get("speed_limit").MustUint64() * 1000000 / 8)
 		case "V2ray":
 			user.UUID = response.Get("data").GetIndex(i).Get("v2ray_user").Get("uuid").MustString()
 			user.Email = response.Get("data").GetIndex(i).Get("v2ray_user").Get("email").MustString()
 			user.AlterID = uint16(response.Get("data").GetIndex(i).Get("v2ray_user").Get("alter_id").MustUint64())
-			//user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("v2ray_user").Get("speed_limit").MustString() * 1000000 / 8)
+			user.SpeedLimit = uint64(response.Get("data").GetIndex(i).Get("v2ray_user").Get("speed_limit").MustUint64() * 1000000 / 8)
 		}
 		userList[i] = user
 	}
